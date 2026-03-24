@@ -18,6 +18,59 @@ function loadLessons(level_no) {
         });
 }
 
+function loadDetails(wordId) {
+    fetch(`https://openapi.programming-hero.com/api/word/${wordId}`)
+        .then(response => response.json())
+        .then(wordDetails => {
+            displayDetails(wordDetails.data);
+        });
+}
+
+const displayDetails = (wordDetails) => {
+    let word = wordDetails.word;
+    let pronounciation = wordDetails.pronunciation;
+    let meaning = wordDetails.meaning;
+    let example = wordDetails.sentence;
+    let synonyms = wordDetails.synonyms;
+
+    const id = document.getElementById("my_modal_5");
+    id.innerHTML = "";
+
+    modalDiv = document.createElement("div");
+
+    modalDiv.classList.add("modal-box");
+
+    modalDiv.innerHTML = `
+                <div class="border-2 border-[#EDF7FF] rounded-lg p-[24px]">
+                    <h1 class="text-[36px] font-semibold">${word === null ? "Not Available" : word} (<i class="fa-solid fa-microphone"
+                            style="color: rgb(8, 8, 8);"></i>:${pronounciation === null?"Not Available":pronounciation})
+                    </h1>
+                    <h3 class="font-semibold text-[24px] mt-8">Meaning</h3>
+                    <h3 class="bangla-font font-medium text-[24px]">${meaning ===null? "Not Available":meaning}</h3>
+                    <h3 class="font-semibold text-[24px] mt-8">Example</h3>
+                    <p class="text-[24px]">${example===null?"Not Available":example}</p>
+                    <h3 class="bangla-font font-medium text-[24px] mt-8">সমার্থক শব্দগুলো</h3>
+                    <div class="flex flex-wrap gap-[18px]">
+                    ${synonyms.length ===0 
+                        ?`<p class="text-[20px] bg-[#EDF7FF] border-1 border-[#D7E4EF] px-[20px] py-[6px] rounded-md" >Not Available</p >` 
+                        :synonyms.map(element =>
+                        `
+                            <p class="text-[20px] bg-[#EDF7FF] border-1 border-[#D7E4EF] px-[20px] py-[6px] rounded-md">${element}</p>
+                        `).join("")}
+                    </div>
+                </div>
+                <div class="modal-action flex justify-start">
+                    <form method="dialog">
+                        <button class="btn btn-primary font-medium text-[24px] rounded-lg px-[35px] py-[6px]">Complete Learning</button>
+                    </form>
+                </div>
+    `
+    id.appendChild(modalDiv);
+    id.showModal();
+
+}
+
+
 const displayLessons = (lesson) => {
     document.getElementById("lesson-section").innerHTML = "";
     if (lesson.length == 0) {
@@ -47,7 +100,7 @@ const displayLessons = (lesson) => {
                 <h1 class="bangla-font font-semibold text-[32px] text-center">"${meaning == null ? "Meaning Not Found" : meaning} / ${pronounciation == null ? "Pronounciation Not Found" : pronounciation}"</h1>
             </div>
             <div class="flex justify-between">
-                <button class="btn bg-[#1a90ff1e]"><i class="fa-solid fa-circle-info"
+                <button onclick="loadDetails(${words.id})" class="btn bg-[#1a90ff1e]"><i class="fa-solid fa-circle-info"
                         style="color: rgb(8, 8, 8);"></i></button>
                 <button class="btn bg-[#1a90ff1e]"> <i class="fa-solid fa-volume-high" style="color: rgb(8, 8, 8);"></i>
                 </button>
