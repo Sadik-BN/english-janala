@@ -7,7 +7,15 @@ function loadLevels() {
 function loadLessons(level_no) {
     fetch(`https://openapi.programming-hero.com/api/level/${level_no}`)
         .then((response) => response.json())
-        .then((lessonData) => displayLessons(lessonData.data));
+        .then((lessonData) => {
+            let btns = document.getElementsByClassName("lesson-btn");
+            for (let btn of btns) {
+                btn.classList.add("btn-outline");
+            }
+            document.getElementById(`lesson-btn-${level_no}`).classList.remove("btn-outline");
+
+            displayLessons(lessonData.data);
+        });
 }
 
 const displayLessons = (lesson) => {
@@ -53,7 +61,8 @@ const displayLevels = (levels) => {
     document.getElementById("levels").innerHTML = "";
     for (let level of levels) {
         const levelBtn = document.createElement("button");
-        levelBtn.classList.add("btn", "btn-primary", "btn-outline");
+        levelBtn.setAttribute("id", `lesson-btn-${level.level_no}`)
+        levelBtn.classList.add("btn", "btn-primary", "btn-outline", "lesson-btn");
         levelBtn.setAttribute("onclick", `loadLessons(${level.level_no})`);
         levelBtn.innerHTML = `
                 <img src="assets/fa-book-open.png" alt="">
