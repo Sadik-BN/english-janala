@@ -1,10 +1,15 @@
 function loadLevels() {
+    showSpinner(true);
     fetch("https://openapi.programming-hero.com/api/levels/all")
         .then((response) => response.json())
-        .then((levelData) => displayLevels(levelData.data));
+        .then((levelData) =>{ 
+            showSpinner(false);
+            displayLevels(levelData.data);
+        });
 }
 
 function loadLessons(level_no) {
+    showSpinner(true);
     fetch(`https://openapi.programming-hero.com/api/level/${level_no}`)
         .then((response) => response.json())
         .then((lessonData) => {
@@ -14,17 +19,33 @@ function loadLessons(level_no) {
             }
             document.getElementById(`lesson-btn-${level_no}`).classList.remove("btn-outline");
 
+            showSpinner(false);
             displayLessons(lessonData.data);
         });
 }
 
 function loadDetails(wordId) {
+    showSpinner(true);
     fetch(`https://openapi.programming-hero.com/api/word/${wordId}`)
         .then(response => response.json())
         .then(wordDetails => {
+            showSpinner(false);
             displayDetails(wordDetails.data);
         });
 }
+
+
+const showSpinner= status=>{
+    if(status==true){
+        document.getElementById("spinner").hidden=false;
+        document.getElementById("lesson-section").hidden=true;
+    }
+    else{
+        document.getElementById("spinner").hidden = true;
+        document.getElementById("lesson-section").hidden = false;
+    }
+}
+
 
 const displayDetails = (wordDetails) => {
     let word = wordDetails.word;
