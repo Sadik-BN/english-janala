@@ -1,8 +1,16 @@
+function pronounceWord(word) {
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = "en-US";
+    utterance.rate = 0.7;   // speed
+    utterance.pitch = 1;  // tone
+    window.speechSynthesis.speak(utterance);
+}
+
 function loadLevels() {
     showSpinner(true);
     fetch("https://openapi.programming-hero.com/api/levels/all")
         .then((response) => response.json())
-        .then((levelData) =>{ 
+        .then((levelData) => {
             showSpinner(false);
             displayLevels(levelData.data);
         });
@@ -25,22 +33,20 @@ function loadLessons(level_no) {
 }
 
 function loadDetails(wordId) {
-    showSpinner(true);
     fetch(`https://openapi.programming-hero.com/api/word/${wordId}`)
         .then(response => response.json())
         .then(wordDetails => {
-            showSpinner(false);
             displayDetails(wordDetails.data);
         });
 }
 
 
-const showSpinner= status=>{
-    if(status==true){
-        document.getElementById("spinner").hidden=false;
-        document.getElementById("lesson-section").hidden=true;
+const showSpinner = status => {
+    if (status == true) {
+        document.getElementById("spinner").hidden = false;
+        document.getElementById("lesson-section").hidden = true;
     }
-    else{
+    else {
         document.getElementById("spinner").hidden = true;
         document.getElementById("lesson-section").hidden = false;
     }
@@ -64,18 +70,18 @@ const displayDetails = (wordDetails) => {
     modalDiv.innerHTML = `
                 <div class="border-2 border-[#EDF7FF] rounded-lg p-[24px]">
                     <h1 class="text-[36px] font-semibold">${word === null ? "Not Available" : word} (<i class="fa-solid fa-microphone"
-                            style="color: rgb(8, 8, 8);"></i>:${pronounciation === null?"Not Available":pronounciation})
+                            style="color: rgb(8, 8, 8);"></i>:${pronounciation === null ? "Not Available" : pronounciation})
                     </h1>
                     <h3 class="font-semibold text-[24px] mt-8">Meaning</h3>
-                    <h3 class="bangla-font font-medium text-[24px]">${meaning ===null? "Not Available":meaning}</h3>
+                    <h3 class="bangla-font font-medium text-[24px]">${meaning === null ? "Not Available" : meaning}</h3>
                     <h3 class="font-semibold text-[24px] mt-8">Example</h3>
-                    <p class="text-[24px]">${example===null?"Not Available":example}</p>
+                    <p class="text-[24px]">${example === null ? "Not Available" : example}</p>
                     <h3 class="bangla-font font-medium text-[24px] mt-8">সমার্থক শব্দগুলো</h3>
                     <div class="flex flex-wrap gap-[18px]">
-                    ${synonyms.length ===0 
-                        ?`<p class="text-[20px] bg-[#EDF7FF] border-1 border-[#D7E4EF] px-[20px] py-[6px] rounded-md" >Not Available</p >` 
-                        :synonyms.map(element =>
-                        `
+                    ${synonyms.length === 0
+            ? `<p class="text-[20px] bg-[#EDF7FF] border-1 border-[#D7E4EF] px-[20px] py-[6px] rounded-md" >Not Available</p >`
+            : synonyms.map(element =>
+                `
                             <p class="text-[20px] bg-[#EDF7FF] border-1 border-[#D7E4EF] px-[20px] py-[6px] rounded-md">${element}</p>
                         `).join("")}
                     </div>
@@ -123,7 +129,7 @@ const displayLessons = (lesson) => {
             <div class="flex justify-between">
                 <button onclick="loadDetails(${words.id})" class="btn bg-[#1a90ff1e]"><i class="fa-solid fa-circle-info"
                         style="color: rgb(8, 8, 8);"></i></button>
-                <button class="btn bg-[#1a90ff1e]"> <i class="fa-solid fa-volume-high" style="color: rgb(8, 8, 8);"></i>
+                <button onclick="pronounceWord('${word === null ? "Not Found" : word}')" class="btn bg-[#1a90ff1e]"> <i class="fa-solid fa-volume-high" style="color: rgb(8, 8, 8);"></i>
                 </button>
             </div>
         `
@@ -190,7 +196,7 @@ const displaySearch = (lesson) => {
 
 const searchBtn = document.getElementById("search-btn");
 
-searchBtn.addEventListener("click",()=>{
+searchBtn.addEventListener("click", () => {
 
     // all active btns inactive
     let btns = document.getElementsByClassName("lesson-btn");
@@ -202,21 +208,20 @@ searchBtn.addEventListener("click",()=>{
     let input = document.getElementById("search-input");
     let searchText = input.value.trim().toLowerCase();
 
-    if(searchText==="")
-    {
+    if (searchText === "") {
         displaySearch([]);
         return;
     }
 
     showSpinner(true);
     fetch("https://openapi.programming-hero.com/api/words/all")
-    .then(response=>response.json())
-    .then(data=>{
-       const words = data.data;
+        .then(response => response.json())
+        .then(data => {
+            const words = data.data;
 
-        const filterWords = words.filter(word=>word.word.toLowerCase().includes(searchText));
-        displaySearch(filterWords);
-    });
+            const filterWords = words.filter(word => word.word.toLowerCase().includes(searchText));
+            displaySearch(filterWords);
+        });
     showSpinner(false);
-    input.value="";
+    input.value = "";
 });
