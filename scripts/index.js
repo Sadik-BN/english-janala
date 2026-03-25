@@ -1,6 +1,6 @@
 function pronounceWord(word) {
     const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = "en-US";
+    utterance.lang = "en-GB";
     utterance.rate = 0.7;   // speed
     utterance.pitch = 1;  // tone
     window.speechSynthesis.speak(utterance);
