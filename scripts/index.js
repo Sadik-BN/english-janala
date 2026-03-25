@@ -186,7 +186,7 @@ const displaySearch = (lesson) => {
             <div class="flex justify-between">
                 <button onclick="loadDetails(${words.id})" class="btn bg-[#1a90ff1e]"><i class="fa-solid fa-circle-info"
                         style="color: rgb(8, 8, 8);"></i></button>
-                <button class="btn bg-[#1a90ff1e]"> <i class="fa-solid fa-volume-high" style="color: rgb(8, 8, 8);"></i>
+                <button onclick="pronounceWord('${word === null ? "Not Found" : word}')" class="btn bg-[#1a90ff1e]"> <i class="fa-solid fa-volume-high" style="color: rgb(8, 8, 8);"></i>
                 </button>
             </div>
         `
